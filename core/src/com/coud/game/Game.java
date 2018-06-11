@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
@@ -24,7 +25,9 @@ public class Game extends ApplicationAdapter {
     private Sound biteSound;
     private Array<Fruit> fruits;
     private long lastFruitDropTime;
-    private int score = 0;
+    private int eat;
+    private String eatLabel;
+    private BitmapFont scoreBitmapFont;
 
     @Override
     public void create() {
@@ -42,6 +45,9 @@ public class Game extends ApplicationAdapter {
         Fruit fruit = new Fruit(random(0, 800 - 64), 480, 32, 32, random.nextInt(3 - 1 + 1) + 1);
         lastFruitDropTime = TimeUtils.nanoTime();
         fruits.add(fruit);
+        eat = 50;
+        eatLabel = "eat: 50";
+        scoreBitmapFont = new BitmapFont();
     }
 
 
@@ -56,6 +62,8 @@ public class Game extends ApplicationAdapter {
         for (Fruit fruit : fruits) {
             batch.draw(fruit.randomFruit(), fruit.x, fruit.y);
         }
+        scoreBitmapFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        scoreBitmapFont.draw(batch, eatLabel, 25, 460);
         batch.end();
         player.movement(characterSprite);
         if (TimeUtils.nanoTime() - lastFruitDropTime > 1000000000) {
@@ -65,12 +73,21 @@ public class Game extends ApplicationAdapter {
         for (Iterator<Fruit> iter = fruits.iterator(); iter.hasNext(); ) {
             Fruit fruit = iter.next();
             fruit.y -= 300 * Gdx.graphics.getDeltaTime();
-            if (fruit.y + 64 < 0) iter.remove();
+            if (fruit.y + 64 < 0) {
+                iter.remove();
+                eat++;
+                eatLabel = "eat: " + eat;
+            }
             if (fruit.overlaps(player)) {
-                score += 1;
-                System.out.println("Punkty: " + score);
+                eat--;
+                eatLabel = "eat: " + eat;
                 biteSound.play();
                 iter.remove();
+            }
+            if (eat <= 0) {
+                Gdx.app.exit();
+            } else if (eat > 50) {
+                Gdx.app.exit();
             }
         }
     }
