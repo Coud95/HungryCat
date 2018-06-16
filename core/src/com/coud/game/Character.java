@@ -6,18 +6,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-class Character extends Rectangle {
-    final Texture TEXTURE = new Texture(("cat.png"));
+public class Character extends Rectangle {
+    public static final Texture TEXTURE = new Texture(("cat.png"));
     private boolean flipped = false;
 
-    Character(float x, float y, float width, float height) {
+    public Character(float x, float y, float width, float height) {
         super(x, y, width, height);
     }
 
-    void movement(Sprite characterSprite) {
+    public void movement(Sprite characterSprite) {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                x -= 800 * Gdx.graphics.getDeltaTime();
+                x -= 600 * Gdx.graphics.getDeltaTime();
             } else {
                 x -= 300 * Gdx.graphics.getDeltaTime();
             }
@@ -26,7 +26,7 @@ class Character extends Rectangle {
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                x += 800 * Gdx.graphics.getDeltaTime();
+                x += 600 * Gdx.graphics.getDeltaTime();
             } else {
                 x += 300 * Gdx.graphics.getDeltaTime();
             }

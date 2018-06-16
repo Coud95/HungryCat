@@ -5,18 +5,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 
-class Fruit extends Rectangle {
-    public final Texture BANANA = new Texture(Gdx.files.internal("banana.png"));
-    public final Texture APPLE = new Texture(Gdx.files.internal("apple.png"));
-    public final Texture GRAPES = new Texture(Gdx.files.internal("grapes.png"));
+public class Fruit extends Rectangle {
+    public final Texture BANANA = new Texture(Gdx.files.internal("fruits/banana.png"));
+    public final Texture APPLE = new Texture(Gdx.files.internal("fruits/apple.png"));
+    public final Texture GRAPES = new Texture(Gdx.files.internal("fruits/grapes.png"));
     private int fruitTexture;
 
-    Fruit(float x, float y, float width, float height, int fruitTexture) {
+    public Fruit(float x, float y, float width, float height, int fruitTexture) {
         super(x, y, width, height);
         this.fruitTexture = fruitTexture;
     }
 
-    Texture randomFruit() {
+    public Texture randomFruit() {
         if (fruitTexture == 1) {
             return BANANA;
         } else if (fruitTexture == 2) {

@@ -6,11 +6,11 @@ import com.coud.game.Game;
 
 public class DesktopLauncher {
 
-	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = "HungryCat";
-		config.width = 800;
-		config.height = 480;
-		new LwjglApplication(new Game(), config);
-	}
+    public static void main(String[] arg) {
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.title = "HungryCat";
+        config.width = 800;
+        config.height = 480;
+        new LwjglApplication(new Game(), config);
+    }
 }
