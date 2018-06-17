@@ -1,4 +1,4 @@
-package com.coud.game;
+package com.coud.game.Items;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,9 +6,9 @@ import com.badlogic.gdx.math.Rectangle;
 
 
 public class Fruit extends Rectangle {
-    public final Texture BANANA = new Texture(Gdx.files.internal("fruits/banana.png"));
-    public final Texture APPLE = new Texture(Gdx.files.internal("fruits/apple.png"));
-    public final Texture GRAPES = new Texture(Gdx.files.internal("fruits/grapes.png"));
+    public final Texture BANANA = new Texture(Gdx.files.internal("drop/banana.png"));
+    public final Texture APPLE = new Texture(Gdx.files.internal("drop/apple.png"));
+    public final Texture GRAPES = new Texture(Gdx.files.internal("drop/grapes.png"));
     private int fruitTexture;
 
     public Fruit(float x, float y, float width, float height, int fruitTexture) {

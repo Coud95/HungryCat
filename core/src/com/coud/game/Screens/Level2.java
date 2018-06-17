@@ -5,10 +5,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.coud.game.Fruit;
+import com.coud.game.Items.Bomb;
+import com.coud.game.Items.Fruit;
 import com.coud.game.Game;
 import com.coud.game.LevelDefaults;
 
@@ -19,24 +21,26 @@ import static com.badlogic.gdx.math.MathUtils.random;
 public class Level2 implements Screen, LevelDefaults {
     private final Game game;
     private long lastFruitDropTime;
+    private long lastBombDropTime;
     private Array<Fruit> fruits;
+    private Array<Bomb> bombs;
     private OrthographicCamera camera;
     private static SpriteBatch batch;
-    private static int eat;
-    private static String eatLabel;
     private static BitmapFont scoreBitmapFont;
 
-    public Level2(final Game game) {
+    Level2(final Game game) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
         batch = new SpriteBatch();
         fruits = new Array<>();
+        bombs = new Array<>();
         Fruit fruit = new Fruit(random(0, 800 - 32), 480, 32, 32, random.nextInt(3 - 1 + 1) + 1);
-        lastFruitDropTime = TimeUtils.nanoTime();
+        lastFruitDropTime = TimeUtils.millis();
+        lastBombDropTime = TimeUtils.millis();
         fruits.add(fruit);
-        eat = 100;
-        eatLabel = "eat: 100";
+        Game.eat = 100;
+        Game.eatLabel = "eat: 100";
         scoreBitmapFont = new BitmapFont();
         checkBackgroundMusic();
     }
@@ -57,34 +61,37 @@ public class Level2 implements Screen, LevelDefaults {
         for (Fruit fruit : fruits) {
             batch.draw(fruit.randomFruit(), fruit.x, fruit.y);
         }
+        for (Bomb bomb : bombs) {
+            batch.draw(new Sprite(Bomb.BOMB), bomb.x, bomb.y);
+        }
         scoreBitmapFont.setColor(1, 1, 1, 1);
-        scoreBitmapFont.draw(batch, eatLabel, 25, 460);
+        scoreBitmapFont.draw(batch, Game.eatLabel, 25, 460);
         batch.end();
         Game.player.movement(Game.characterSprite);
-        if (TimeUtils.nanoTime() - lastFruitDropTime > 1000000000) {
+        if (TimeUtils.millis() - lastFruitDropTime > 1000) {
             fruits.add(new Fruit(random(0, 800 - 32), 480, 32, 32, random.nextInt(3 - 1 + 1) + 1));
-            lastFruitDropTime = TimeUtils.nanoTime();
+            lastFruitDropTime = TimeUtils.millis();
+        }
+        if (TimeUtils.millis() - lastBombDropTime > 5000) {
+            bombs.add(new Bomb(random(0, 800 - 32), 480, 32, 32));
+            lastBombDropTime = TimeUtils.millis();
         }
         for (Iterator<Fruit> iter = fruits.iterator(); iter.hasNext(); ) {
             Fruit fruit = iter.next();
             fruit.y -= 400 * Gdx.graphics.getDeltaTime();
-            if (fruit.y + 64 < 0) {
-                iter.remove();
-                eat += 5;
-                eatLabel = "eat: " + eat;
-                Game.failSound.play();
+            fruitMechanics(fruit, iter);
+        }
+        for (Bomb bomb : bombs) {
+            bomb.y -= 450 * Gdx.graphics.getDeltaTime();
+            if (bomb.overlaps(Game.player)) {
+                game.setScreen(new GameOver(game, 2));
+                Game.bombSound.play();
             }
-            if (fruit.overlaps(Game.player)) {
-                eat--;
-                eatLabel = "eat: " + eat;
-                Game.biteSound.play();
-                iter.remove();
-            }
-            if (eat <= 0) {
-                game.setScreen(new GameOver(game));
-            } else if (eat > 110) {
-                game.setScreen(new GameOver(game));
-            }
+        }
+        if (Game.eat <= 0) {
+            game.setScreen(new GameOver(game, 2));
+        } else if (Game.eat > 110) {
+            game.setScreen(new GameOver(game, 2));
         }
     }
 

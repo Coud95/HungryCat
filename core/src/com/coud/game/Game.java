@@ -4,6 +4,7 @@ package com.coud.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,9 +16,13 @@ public class Game extends com.badlogic.gdx.Game {
     public static Music backgroundMusic;
     public static Sound biteSound;
     public static Sound failSound;
+    public static Sound bombSound;
     public static Character player;
     public static Sprite characterSprite;
-
+    public static int eat;
+    public static String eatLabel;
+    public static Texture backgroundTexture;
+    public static Sprite backgroundSprite;
 
 
     @Override
@@ -29,6 +34,7 @@ public class Game extends com.badlogic.gdx.Game {
         backgroundMusic.play();
         biteSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bite.mp3"));
         failSound = Gdx.audio.newSound(Gdx.files.internal("sounds/fail.wav"));
+        bombSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bomb.mp3"));
         player = new Character(800 / 2 - 64 / 2, 20, 64, 64);
         characterSprite = new Sprite(Character.TEXTURE);
         this.setScreen(new Menu(this));
@@ -45,6 +51,7 @@ public class Game extends com.badlogic.gdx.Game {
         backgroundMusic.dispose();
         biteSound.dispose();
         failSound.dispose();
+        bombSound.dispose();
         Character.TEXTURE.dispose();
     }
 }
