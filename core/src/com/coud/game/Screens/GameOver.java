@@ -31,18 +31,18 @@ public class GameOver implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
-
         game.batch.begin();
         game.font.draw(game.batch, "GAME OVER!!! ", 400, 150);
         game.font.draw(game.batch, "Press R to try again!", 400, 100);
+        game.font.draw(game.batch, "ESC to exit!", 400, 50);
         game.batch.end();
-
         if (Gdx.input.isKeyPressed(Input.Keys.R)) {
             game.setScreen(new Level1(game));
             dispose();
+        }else if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
         }
     }
 

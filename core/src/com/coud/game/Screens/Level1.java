@@ -2,56 +2,44 @@ package com.coud.game.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.coud.game.Character;
 import com.coud.game.Fruit;
 import com.coud.game.Game;
+import com.coud.game.LevelDefaults;
 
 import java.util.Iterator;
 
 import static com.badlogic.gdx.math.MathUtils.random;
 
-public class Level1 implements Screen {
+public class Level1 implements Screen, LevelDefaults {
     private final Game game;
     private long lastFruitDropTime;
     private Array<Fruit> fruits;
     private OrthographicCamera camera;
-    public static SpriteBatch batch;
-    public static com.coud.game.Character player;
-    private Sprite characterSprite;
-    public static Sound biteSound;
-    public static Sound failSound;
-    public static int eat;
-    public static String eatLabel;
-    public static BitmapFont scoreBitmapFont;
+    private static SpriteBatch batch;
+    private static int eat;
+    private static String eatLabel;
+    private static BitmapFont scoreBitmapFont;
 
 
-    public Level1(final Game game) {
+    Level1(final Game game) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
         batch = new SpriteBatch();
-        player = new Character(800 / 2 - 64 / 2, 20, 64, 64);
-        characterSprite = new Sprite(Character.TEXTURE);
-        biteSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bite.mp3"));
-        failSound = Gdx.audio.newSound(Gdx.files.internal("sounds/fail.wav"));
-        fruits = new Array<Fruit>();
+        fruits = new Array<>();
         Fruit fruit = new Fruit(random(0, 800 - 32), 480, 32, 32, random.nextInt(3 - 1 + 1) + 1);
         lastFruitDropTime = TimeUtils.nanoTime();
         fruits.add(fruit);
         eat = 50;
         eatLabel = "eat: 50";
         scoreBitmapFont = new BitmapFont();
-        if(!Game.backgroundMusic.isPlaying()) {
-            Game.backgroundMusic.play();
-        }
+        checkBackgroundMusic();
     }
 
     @Override
@@ -65,14 +53,14 @@ public class Level1 implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(characterSprite, player.x, player.y);
+        batch.draw(Game.characterSprite, Game.player.x, Game.player.y);
         for (Fruit fruit : fruits) {
             batch.draw(fruit.randomFruit(), fruit.x, fruit.y);
         }
         scoreBitmapFont.setColor(1, 1, 1, 1);
         scoreBitmapFont.draw(batch, eatLabel, 25, 460);
         batch.end();
-        player.movement(characterSprite);
+        Game.player.movement(Game.characterSprite);
         if (TimeUtils.nanoTime() - lastFruitDropTime > 1000000000) {
             fruits.add(new Fruit(random(0, 800 - 32), 480, 32, 32, random.nextInt(3 - 1 + 1) + 1));
             lastFruitDropTime = TimeUtils.nanoTime();
@@ -84,16 +72,16 @@ public class Level1 implements Screen {
                 iter.remove();
                 eat += 5;
                 eatLabel = "eat: " + eat;
-                failSound.play();
+                Game.failSound.play();
             }
-            if (fruit.overlaps(player)) {
+            if (fruit.overlaps(Game.player)) {
                 eat--;
                 eatLabel = "eat: " + eat;
-                biteSound.play();
+                Game.biteSound.play();
                 iter.remove();
             }
             if (eat <= 0) {
-                game.setScreen(new GameOver(game));
+                game.setScreen(new Level2(game));
             } else if (eat > 55) {
                 game.setScreen(new GameOver(game));
             }
@@ -127,8 +115,5 @@ public class Level1 implements Screen {
             fruit.BANANA.dispose();
             fruit.GRAPES.dispose();
         }
-        biteSound.dispose();
-        failSound.dispose();
-        Character.TEXTURE.dispose();
     }
 }
