@@ -1,6 +1,7 @@
 package com.coud.game.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -25,6 +26,8 @@ public class Level1 implements Screen, LevelDefaults {
     private OrthographicCamera camera;
     private static SpriteBatch batch;
     private static BitmapFont scoreBitmapFont;
+    private static Sprite level1Sprite;
+    private boolean started = false;
 
 
     Level1(final Game game) {
@@ -32,12 +35,12 @@ public class Level1 implements Screen, LevelDefaults {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
         Game.backgroundTexture = new Texture("level1.jpg");
-        Game.backgroundSprite =new Sprite(Game.backgroundTexture);
+        Game.backgroundSprite = new Sprite(Game.backgroundTexture);
+        Texture level1 = new Texture("1.png");
+        level1Sprite = new Sprite(level1);
         batch = new SpriteBatch();
         fruits = new Array<>();
-        Fruit fruit = new Fruit(random(0, 800 - 32), 480, 32, 32, random.nextInt(3 - 1 + 1) + 1);
         lastFruitDropTime = TimeUtils.nanoTime();
-        fruits.add(fruit);
         Game.eat = 50;
         Game.eatLabel = "eat: 50";
         scoreBitmapFont = new BitmapFont();
@@ -62,20 +65,24 @@ public class Level1 implements Screen, LevelDefaults {
         }
         scoreBitmapFont.setColor(1, 1, 1, 1);
         scoreBitmapFont.draw(batch, Game.eatLabel, 25, 460);
+        starting(level1Sprite, batch, started);
         batch.end();
-        Game.player.movement(Game.characterSprite);
-        if (TimeUtils.nanoTime() - lastFruitDropTime > 1000000000) {
-            fruits.add(new Fruit(random(0, 800 - 32), 480, 32, 32, random.nextInt(3 - 1 + 1) + 1));
-            lastFruitDropTime = TimeUtils.nanoTime();
-        }
-        for (Iterator<Fruit> iter = fruits.iterator(); iter.hasNext(); ) {
-            Fruit fruit = iter.next();
-            fruit.y -= 400 * Gdx.graphics.getDeltaTime();
-            fruitMechanics(fruit, iter);
-            if (Game.eat <= 0) {
-                game.setScreen(new Level2(game));
-            } else if (Game.eat > 55) {
-                game.setScreen(new GameOver(game, 1));
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) started = true;
+        if (started) {
+            Game.player.movement(Game.characterSprite);
+            if (TimeUtils.nanoTime() - lastFruitDropTime > 1000000000) {
+                fruits.add(new Fruit(random(0, 800 - 32), 480, 32, 32, random.nextInt(3 - 1 + 1) + 1));
+                lastFruitDropTime = TimeUtils.nanoTime();
+            }
+            for (Iterator<Fruit> iter = fruits.iterator(); iter.hasNext(); ) {
+                Fruit fruit = iter.next();
+                fruit.y -= 400 * Gdx.graphics.getDeltaTime();
+                fruitMechanics(fruit, iter);
+                if (Game.eat <= 0) {
+                    game.setScreen(new Level2(game));
+                } else if (Game.eat > 55) {
+                    game.setScreen(new GameOver(game, 1));
+                }
             }
         }
     }

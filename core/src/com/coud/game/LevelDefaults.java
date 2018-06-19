@@ -1,5 +1,7 @@
 package com.coud.game;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.coud.game.Items.Fruit;
 
 import java.util.Iterator;
@@ -7,7 +9,7 @@ import java.util.Iterator;
 public interface LevelDefaults {
 
     default void checkBackgroundMusic() {
-        if(!Game.backgroundMusic.isPlaying()) {
+        if (!Game.backgroundMusic.isPlaying()) {
             Game.backgroundMusic.play();
         }
     }
@@ -24,6 +26,12 @@ public interface LevelDefaults {
             Game.eatLabel = "eat: " + Game.eat;
             Game.biteSound.play();
             iter.remove();
+        }
+    }
+
+    default void starting(Sprite text, Batch batch, boolean started) {
+        if (!started) {
+            batch.draw(text, 0, 0);
         }
     }
 }
