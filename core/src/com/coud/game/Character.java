@@ -7,29 +7,21 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Character extends Rectangle {
-    public static final Texture TEXTURE = new Texture(("cat.png"));
+    static final Texture TEXTURE = new Texture(("cat.png"));
     private boolean flipped = false;
 
-    public Character(float x, float y, float width, float height) {
+    Character(float x, float y, float width, float height) {
         super(x, y, width, height);
     }
 
     public void movement(Sprite characterSprite) {
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                x -= 600 * Gdx.graphics.getDeltaTime();
-            } else {
-                x -= 300 * Gdx.graphics.getDeltaTime();
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+            x -= 600 * Gdx.graphics.getDeltaTime();
             if (!flipped) characterSprite.flip(true, false);
             flipped = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                x += 600 * Gdx.graphics.getDeltaTime();
-            } else {
-                x += 300 * Gdx.graphics.getDeltaTime();
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
+            x += 600 * Gdx.graphics.getDeltaTime();
             if (flipped) characterSprite.flip(true, false);
             flipped = false;
         }

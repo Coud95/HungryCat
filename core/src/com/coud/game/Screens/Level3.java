@@ -9,42 +9,46 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.coud.game.Items.Fruit;
 import com.coud.game.Game;
+import com.coud.game.Items.Bomb;
+import com.coud.game.Items.Cupcake;
+import com.coud.game.Items.Fruit;
 import com.coud.game.LevelDefaults;
 
 import java.util.Iterator;
 
 import static com.badlogic.gdx.math.MathUtils.random;
 
-public class Level1 implements Screen, LevelDefaults {
+public class Level3 implements Screen, LevelDefaults {
     private final Game game;
-    private long lastFruitDropTime;
+    private long lastCupcakeDropTime;
+    private long lastBombDropTime;
     private OrthographicCamera camera;
     private static SpriteBatch batch;
     private static BitmapFont scoreBitmapFont;
-    private static Sprite level1Sprite;
+    private static Sprite level3sprite;
     private boolean started = false;
 
-
-    Level1(final Game game) {
+    Level3(final Game game) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-        Game.backgroundTexture = new Texture("level1.jpg");
+        Game.backgroundTexture = new Texture("level3.png");
         Game.backgroundSprite = new Sprite(Game.backgroundTexture);
-        Texture level1 = new Texture("1.png");
-        level1Sprite = new Sprite(level1);
+        Texture level3 = new Texture("3.png");
+        level3sprite = new Sprite(level3);
         batch = new SpriteBatch();
-        lastFruitDropTime = TimeUtils.nanoTime();
-        Game.eat = 50;
-        Game.eatLabel = "eat: 50";
+        lastCupcakeDropTime = TimeUtils.millis();
+        lastBombDropTime = TimeUtils.millis();
+        Game.eat = 100;
+        Game.eatLabel = "eat: 100";
         scoreBitmapFont = new BitmapFont();
         checkBackgroundMusic();
     }
 
     @Override
     public void show() {
+
     }
 
     @Override
@@ -57,25 +61,29 @@ public class Level1 implements Screen, LevelDefaults {
         drawItems(Game.fruits, Game.bombs, Game.cupcakes, batch);
         scoreBitmapFont.setColor(1, 1, 1, 1);
         scoreBitmapFont.draw(batch, Game.eatLabel, 25, 460);
-        starting(level1Sprite, batch, started);
+        starting(level3sprite, batch, started);
         batch.end();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) started = true;
         if (started) {
             Game.player.movement(Game.characterSprite);
-            if (TimeUtils.nanoTime() - lastFruitDropTime > 1000000000) {
-                Game.fruits.add(new Fruit(random(0, 800 - 32), 480, 32, 32, random.nextInt(3 - 1 + 1) + 1, random.nextInt((410 - 330) + 1) + 330));
-                lastFruitDropTime = TimeUtils.nanoTime();
+            if (TimeUtils.millis() - lastCupcakeDropTime > 5000) {
+                Game.cupcakes.add(new Cupcake(random(0, 800 - 32), 480, 32, 32, random.nextInt((500 - 450) + 1) + 450));
+                lastCupcakeDropTime = TimeUtils.millis();
             }
-            for (Iterator<Fruit> iter = Game.fruits.iterator(); iter.hasNext(); ) {
-                Fruit fruit = iter.next();
-                fruit.y -= fruit.speed * Gdx.graphics.getDeltaTime();
-                fruitMechanics(fruit, iter);
+            if (TimeUtils.millis() - lastBombDropTime > 300) {
+                Game.bombs.add(new Bomb(random(0, 800 - 32), 480, 32, 32));
+                lastBombDropTime = TimeUtils.millis();
+            }
+            bombMechanics(Game.bombs, 3, game);
+            for (Iterator<Cupcake> iter = Game.cupcakes.iterator(); iter.hasNext(); ) {
+                Cupcake cupcake = iter.next();
+                cupcake.y -= cupcake.speed * Gdx.graphics.getDeltaTime();
+                cupcakeMechanics(cupcake, iter);
             }
             if (Game.eat <= 0) {
-                Game.freshSpawn();
-                game.setScreen(new Level2(game));
-            } else if (Game.eat > 55) {
-                game.setScreen(new GameOver(game, 1));
+                game.setScreen(new Finish(game));
+            } else if (Game.eat > 110) {
+                game.setScreen(new GameOver(game, 3));
             }
         }
     }
@@ -107,5 +115,7 @@ public class Level1 implements Screen, LevelDefaults {
             fruit.BANANA.dispose();
             fruit.GRAPES.dispose();
         }
+        Bomb.BOMB.dispose();
+        Cupcake.CUPCAKE.dispose();
     }
 }
