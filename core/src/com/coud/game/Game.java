@@ -65,5 +65,6 @@ public class Game extends com.badlogic.gdx.Game {
         failSound.dispose();
         bombSound.dispose();
         Character.TEXTURE.dispose();
+        backgroundTexture.dispose();
     }
 }

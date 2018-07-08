@@ -12,6 +12,7 @@ public class DesktopLauncher {
         config.title = "HungryCat";
         config.width = 800;
         config.height = 480;
+        config.resizable = false;
         config.addIcon("cat.png", Files.FileType.Internal);
         new LwjglApplication(new Game(), config);
     }

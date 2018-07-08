@@ -27,6 +27,7 @@ public class Level2 implements Screen, LevelDefaults {
     private OrthographicCamera camera;
     private static SpriteBatch batch;
     private static BitmapFont scoreBitmapFont;
+    private static Texture level2;
     private static Sprite level2sprite;
     private boolean started = false;
 
@@ -36,7 +37,7 @@ public class Level2 implements Screen, LevelDefaults {
         camera.setToOrtho(false, 800, 480);
         Game.backgroundTexture = new Texture("level2.jpg");
         Game.backgroundSprite = new Sprite(Game.backgroundTexture);
-        Texture level2 = new Texture("2.png");
+        level2 = new Texture("2.png");
         level2sprite = new Sprite(level2);
         batch = new SpriteBatch();
         lastFruitDropTime = TimeUtils.millis();
@@ -129,5 +130,6 @@ public class Level2 implements Screen, LevelDefaults {
         }
         Bomb.BOMB.dispose();
         Cupcake.CUPCAKE.dispose();
+        level2.dispose();
     }
 }

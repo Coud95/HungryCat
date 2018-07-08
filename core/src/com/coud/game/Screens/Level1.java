@@ -23,6 +23,7 @@ public class Level1 implements Screen, LevelDefaults {
     private OrthographicCamera camera;
     private static SpriteBatch batch;
     private static BitmapFont scoreBitmapFont;
+    private static Texture level1;
     private static Sprite level1Sprite;
     private boolean started = false;
 
@@ -33,7 +34,7 @@ public class Level1 implements Screen, LevelDefaults {
         camera.setToOrtho(false, 800, 480);
         Game.backgroundTexture = new Texture("level1.jpg");
         Game.backgroundSprite = new Sprite(Game.backgroundTexture);
-        Texture level1 = new Texture("1.png");
+        level1 = new Texture("1.png");
         level1Sprite = new Sprite(level1);
         batch = new SpriteBatch();
         lastFruitDropTime = TimeUtils.nanoTime();
@@ -107,5 +108,6 @@ public class Level1 implements Screen, LevelDefaults {
             fruit.BANANA.dispose();
             fruit.GRAPES.dispose();
         }
+        level1.dispose();
     }
 }

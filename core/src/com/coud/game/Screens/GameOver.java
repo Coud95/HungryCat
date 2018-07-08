@@ -92,5 +92,6 @@ public class GameOver implements Screen {
     @Override
     public void dispose() {
         gameOverMusic.dispose();
+        catTexture.dispose();
     }
 }

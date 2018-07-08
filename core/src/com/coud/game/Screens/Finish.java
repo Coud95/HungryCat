@@ -13,13 +13,14 @@ public class Finish implements Screen {
     private OrthographicCamera camera;
     private final Game game;
     private static Texture catTexture;
+    private static Music finishMusic;
 
-    public Finish(final Game game) {
+    Finish(final Game game) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
         Game.backgroundMusic.stop();
-        Music finishMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/finish.mp3"));
+        finishMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/finish.mp3"));
         finishMusic.play();
         Game.backgroundTexture = new Texture("background.jpg");
         Game.backgroundSprite = new Sprite(Game.backgroundTexture);
@@ -69,6 +70,7 @@ public class Finish implements Screen {
 
     @Override
     public void dispose() {
-
+        catTexture.dispose();
+        finishMusic.dispose();
     }
 }

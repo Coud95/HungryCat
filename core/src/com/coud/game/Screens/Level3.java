@@ -26,6 +26,7 @@ public class Level3 implements Screen, LevelDefaults {
     private OrthographicCamera camera;
     private static SpriteBatch batch;
     private static BitmapFont scoreBitmapFont;
+    private static Texture level3;
     private static Sprite level3sprite;
     private boolean started = false;
 
@@ -35,7 +36,7 @@ public class Level3 implements Screen, LevelDefaults {
         camera.setToOrtho(false, 800, 480);
         Game.backgroundTexture = new Texture("level3.png");
         Game.backgroundSprite = new Sprite(Game.backgroundTexture);
-        Texture level3 = new Texture("3.png");
+        level3 = new Texture("3.png");
         level3sprite = new Sprite(level3);
         batch = new SpriteBatch();
         lastCupcakeDropTime = TimeUtils.millis();
@@ -117,5 +118,6 @@ public class Level3 implements Screen, LevelDefaults {
         }
         Bomb.BOMB.dispose();
         Cupcake.CUPCAKE.dispose();
+        level3.dispose();
     }
 }
